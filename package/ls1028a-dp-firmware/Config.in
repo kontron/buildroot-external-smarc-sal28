@@ -1,0 +1,5 @@
+config BR2_PACKAGE_LS1028A_DP_FIRMWARE
+	bool "NXP Layerscape LS1028A DisplayPort firmware"
+	help
+	  Firmware for the DisplayPort controller on the NXP Layerscape
+	  LS1028A.
