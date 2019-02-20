@@ -1,0 +1,4 @@
+config BR2_PACKAGE_ALTERA_STAPL
+	bool "altera-stapl"
+	help
+	  Altera Jam STAPL Bytecode Player.

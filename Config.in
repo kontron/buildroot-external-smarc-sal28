@@ -1,2 +1,3 @@
+source "$BR2_EXTERNAL_SMARC_SAL28_PATH/package/altera-stapl/Config.in"
 source "$BR2_EXTERNAL_SMARC_SAL28_PATH/package/ls1028a-dp-firmware/Config.in"
 source "$BR2_EXTERNAL_SMARC_SAL28_PATH/package/ppa-generic/Config.in"
