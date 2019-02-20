@@ -10,14 +10,28 @@ if [ -e $BINARIES_DIR/rcw.bin ]; then
 fi
 
 if [ -e $BINARIES_DIR/u-boot.bin ]; then
-	objcopy -I binary -O binary --gap-fill 0xff --pad-to 0x1d0000 \
+	objcopy -I binary -O binary --gap-fill 0xff --pad-to 0xf0000 \
 		$BINARIES_DIR/u-boot.bin $BINARIES_DIR/u-boot_pad.bin
 fi
 
+if [ -e $BINARIES_DIR/ls1028a-dp-fw.bin ]; then
+	objcopy -I binary -O binary --gap-fill 0xff --pad-to 0x40000 \
+		$BINARIES_DIR/ls1028a-dp-fw.bin $BINARIES_DIR/ls1028a-dp-fw_pad.bin
+fi
+
+if [ -e $BINARIES_DIR/ppa.itb ]; then
+	objcopy -I binary -O binary --gap-fill 0xff --pad-to 0xb0000 \
+		$BINARIES_DIR/ppa.itb $BINARIES_DIR/ppa_pad.itb
+fi
+
 if [ -e $BINARIES_DIR/rcw_pad.bin -a \
-     -e $BINARIES_DIR/u-boot_pad.bin ]; then
+     -e $BINARIES_DIR/u-boot_pad.bin -a \
+     -e $BINARIES_DIR/ls1028a-dp-fw_pad.bin -a \
+     -e $BINARIES_DIR/ppa_pad.itb ]; then
 	cat $BINARIES_DIR/rcw_pad.bin \
 		$BINARIES_DIR/u-boot_pad.bin \
+		$BINARIES_DIR/ls1028a-dp-fw_pad.bin \
+		$BINARIES_DIR/ppa_pad.itb \
 		 > $BINARIES_DIR/flash.bin
 fi
 
