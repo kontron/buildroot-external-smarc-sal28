@@ -116,14 +116,14 @@
 };
 
 &mdio0 {
-	phy0: ethernet-phy@0 {
-		reg = <0x0>;
+	phy0: ethernet-phy@4 {
+		reg = <0x4>;
 		// Atheros PHY on RDB seems to cause traffic loss @ 1Gbps w EEE
 		eee-broken-1000t;
 	};
 
-	phy1: ethernet-phy@2 {
-		reg = <0x2>;
+	phy1: ethernet-phy@5 {
+		reg = <0x5>;
 		// Atheros PHY on RDB seems to cause traffic loss @ 1Gbps w EEE
 		eee-broken-1000t;
 	};
