@@ -34,17 +34,3 @@ if [ -e $BINARIES_DIR/rcw_pad.bin -a \
 		$BINARIES_DIR/ppa_pad.itb \
 		 > $BINARIES_DIR/flash.bin
 fi
-
-#if [ -e $BINARIES_DIR/ppfe-firmware.bin ]; then
-#	objcopy -I binary -O binary --gap-fill 0xff --pad-to 0x20000 \
-#		$BINARIES_DIR/ppfe-firmware.bin $BINARIES_DIR/ppfe-firmware_pad.bin
-#fi
-#
-#if [ -e $BINARIES_DIR/rcw_pad.bin -a \
-#     -e $BINARIES_DIR/u-boot_pad.bin -a \
-#     -e $BINARIES_DIR/ppfe-firmware_pad.bin ]; then
-#	cat $BINARIES_DIR/rcw_pad.bin \
-#		$BINARIES_DIR/u-boot_pad.bin \
-#		$BINARIES_DIR/ppfe-firmware_pad.bin \
-#		 > $BINARIES_DIR/flash.bin
-#fi
