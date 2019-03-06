@@ -18,7 +18,7 @@ bash patch gzip bzip2 perl tar cpio python unzip rsync file \
 bc wget libncurses5-dev git subversion
 ```
 
-This layer was tested on buildroot version 2018.11.
+This layer was tested on buildroot version 2019.02.
 
 ## Build
 
@@ -27,11 +27,11 @@ appropriate defconfig in the `buildroot-external-smarc-sal28/configs`
 directory.
 
 ```
-git clone git://git.busybox.net/buildroot
-git clone https://github.com/kontron/buildroot-external-smarc-sal28.git -b 2018.11.3
+git clone git://git.busybox.net/buildroot -b 2019.02
+git clone https://github.com/kontron/buildroot-external-smarc-sal28.git
 mkdir build
 cd build
-make BR2_EXTERNAL=../buildroot-external-smarc-sal28 O=`pwd` kontron_smarc_sal28_defconfig
+make -C ../buildroot BR2_EXTERNAL=../buildroot-external-smarc-sal28 O=`pwd` kontron_smarc_sal28_defconfig
 make
 ```
 
