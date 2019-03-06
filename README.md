@@ -7,12 +7,18 @@ SMARC-sAL28 board. This project provides an extension to buildroot to
 provide this BSP outside of the standard buildroot tree.
 
 
-## Quick Start
+## Install System Dependencies
 
-The external is tested on Debian 9. The tree shouldn't have any other
-dependencies that buildroot itself. This layer was tested on buildroot
-version 2018.11.
+The external is tested on Debian 9. The following system build
+dependencies are required (by buildroot itself).
 
+```
+apt install which sed make binutils build-essential gcc g++ \
+bash patch gzip bzip2 perl tar cpio python unzip rsync file \
+bc wget libncurses5-dev git subversion
+```
+
+This layer was tested on buildroot version 2018.11.
 
 ## Build
 
