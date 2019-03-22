@@ -39,11 +39,23 @@ The resulting bootloader, kernel, root filesystem and SPI flash image will
 be put in the `build/images` directory.
 
 
-## Flash the SPI image
+## Available images
 
-The `output/flash.bin` is a complete SPI flash image which can be
-programmed into the flash.
+After building, there will be two images. The `output/spi-flash.img` is a
+complete flash image which can be programmed into SPI flash. Please note,
+that the first half of the SPI flash is usually write protected and can not
+be programmed. Just write the second half of the image. This section will
+contain the standard bootloader which is started by default.
 
+The `output/sd-card.img` contains an image which can be transferred to a SD
+card. Use the SMARC test mode to enable SDHC boot. This is a last resort
+booting mechanism which does not depend on any other flash content on the
+board and works in every case.
+
+## Booting the board
+
+For a details on the boot process of the processor see the documentation of
+the board in [u-boot][3] and the documentation of the [rcw][4].
 
 ## License
 
@@ -54,3 +66,5 @@ the `COPYING` file for more information. Buildroot is licensed under the
 
 [1]: https://buildroot.org/downloads/manual/manual.html#outside-br-custom
 [2]: https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html
+[3]: https://github.com/kontron/u-boot-smarc-sal28/blob/master/board/kontron/sl28/README
+[4]: https://github.com/kontron/rcw-smarc-sal28/blob/master/README.md
