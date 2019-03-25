@@ -41,13 +41,13 @@ be put in the `build/images` directory.
 
 ## Available images
 
-After building, there will be two images. The `output/spi-flash.img` is a
+After building, there will be two images. The `images/spi-flash.img` is a
 complete flash image which can be programmed into SPI flash. Please note,
 that the first half of the SPI flash is usually write protected and can not
 be programmed. Just write the second half of the image. This section will
 contain the standard bootloader which is started by default.
 
-The `output/sd-card.img` contains an image which can be transferred to a SD
+The `images/sd-card.img` contains an image which can be transferred to a SD
 card. Use the SMARC test mode to enable SDHC boot. This is a last resort
 booting mechanism which does not depend on any other flash content on the
 board and works in every case.
