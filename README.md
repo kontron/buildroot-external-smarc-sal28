@@ -66,5 +66,5 @@ the `COPYING` file for more information. Buildroot is licensed under the
 
 [1]: https://buildroot.org/downloads/manual/manual.html#outside-br-custom
 [2]: https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html
-[3]: https://github.com/kontron/u-boot-smarc-sal28/blob/master/board/kontron/sl28/README
+[3]: https://github.com/kontron/u-boot-smarc-sal28/blob/master/board/kontron/sl28/README.md
 [4]: https://github.com/kontron/rcw-smarc-sal28/blob/master/README.md
