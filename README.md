@@ -58,6 +58,12 @@ that the first half of the SPI flash is usually write protected and can not
 be programmed. Just write the second half of the image. This section will
 contain the standard bootloader which is started by default.
 
+The `images/emmc.img` contains an image which can be transferred to the
+eMMC on the board. It contains two partitions, one which holds the kernel
+and device trees and one for the root filesystem. The boot partition also
+contains a boot.cmd script which is automatically started by the
+bootloader.
+
 The `images/sd-card.img` contains an image which can be transferred to a SD
 card. Use the SMARC test mode to enable SDHC boot. This is a last resort
 booting mechanism which does not depend on any other flash content on the
@@ -70,7 +76,7 @@ the board in [u-boot][3] and the documentation of the [rcw][4].
 
 ## Further readings
 
-* [Das u-boot documenation][3]
+* [Das u-boot SMARC-sAL28 board documenation][3]
 * [Reset Configuration Word documentation][4]
 
 ## License
