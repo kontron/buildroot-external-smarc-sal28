@@ -1,0 +1,197 @@
+/*
+ * bundle the update script with necessary files in one itb blob.
+ *
+ * add '/incbin/' to data node to build from a shell outside the
+ * buildroot environment.
+ * Example:
+ * data = /incbin/("./uboot_install.scr");
+ */
+
+/dts-v1/;
+
+/ {
+	description = "Update script";
+	#address-cells = <1>;
+
+	images {
+		install {
+			description = "Kontron SMARC sAL28 bootloader install script";
+			data = "./uboot_install.scr";
+			type = "script";
+			arch = "arm";
+			os = "u-boot";
+			compression = "none";
+			hash-1 {
+				algo = "md5";
+			};
+		};
+		rcw-1 {
+			description = "sAL28 RCW 2-11__";
+			data = "rcw/sl28-2-11__.bin";
+			type = "firmware";
+			compression = "none";
+			destination = "i2c";
+			hash-1 {
+				algo = "md5";
+			};
+		};
+		rcw-2 {
+			description = "sAL28 RCW 2-1s__";
+			data = "rcw/sl28-2-1s__.bin";
+			type = "firmware";
+			compression = "none";
+			destination = "i2c";
+			hash-1 {
+				algo = "md5";
+			};
+		};
+		rcw-3 {
+			description = "sAL28 RCW 2-22__";
+			data = "rcw/sl28-2-22__.bin";
+			type = "firmware";
+			compression = "none";
+			destination = "i2c";
+			hash-1 {
+				algo = "md5";
+			};
+		};
+		rcw-4 {
+			description = "sAL28 RCW 3-11_q";
+			data = "rcw/sl28-3-11_q.bin";
+			type = "firmware";
+			compression = "none";
+			destination = "i2c";
+			hash-1 {
+				algo = "md5";
+			};
+		};
+		rcw-5 {
+			description = "sAL28 RCW 3-1s_q";
+			data = "rcw/sl28-3-1s_q.bin";
+			type = "firmware";
+			compression = "none";
+			destination = "i2c";
+			hash-1 {
+				algo = "md5";
+			};
+		};
+		rcw-6 {
+			description = "sAL28 RCW 3-22_q";
+			data = "rcw/sl28-3-22_q.bin";
+			type = "firmware";
+			compression = "none";
+			destination = "i2c";
+			hash-1 {
+				algo = "md5";
+			};
+		};
+		rcw-7 {
+			description = "sAL28 RCW 4-11_q";
+			data = "rcw/sl28-4-11_q.bin";
+			type = "firmware";
+			compression = "none";
+			destination = "i2c";
+			hash-1 {
+				algo = "md5";
+			};
+		};
+		rcw-8 {
+			description = "sAL28 RCW 4-1s_q";
+			data = "rcw/sl28-4-1s_q.bin";
+			type = "firmware";
+			compression = "none";
+			destination = "i2c";
+			hash-1 {
+				algo = "md5";
+			};
+		};
+		rcw-9 {
+			description = "sAL28 RCW 4-22_q";
+			data = "rcw/sl28-4-22_q.bin";
+			type = "firmware";
+			compression = "none";
+			destination = "i2c";
+			hash-1 {
+				algo = "md5";
+			};
+		};
+		spi-flash {
+			description = "sAL28 bootloader install image";
+			data = "./spi-flash.img";
+			type = "firmware";
+			destination = "spi";
+			offset = <0x0>;
+			compression = "none";
+			hash-1 {
+				algo = "md5";
+			};
+		};
+		u-boot {
+			description = "sAL28 bootloader update image";
+			data = "./u-boot-with-spl.bin";
+			type = "firmware";
+			destination = "spi";
+			offset = <0x210000>;
+			compression = "none";
+			hash-1 {
+				algo = "md5";
+			};
+		};
+		dp-firmware {
+			description = "sAL28 DP firmware image";
+			data = "./ls1028a-dp-fw.bin";
+			type = "firmware";
+			destination = "spi";
+			offset = <0x300000>;
+			compression = "none";
+			hash-1 {
+				algo = "md5";
+			};
+		};
+	};
+
+	variants {
+		valid_list ="v0 v1 v2 v3 v4 v5 v6 v7 v8 v9 v10 v11 v12 v13 v14 v15";
+		v1 {
+			description = "full SPI flash install with RCW sl28-2-11__";
+			update_parts = "rcw-1 spi-flash";
+		};
+		v2 {
+			description = "full SPI flash install with RCW sl28-2-1s__";
+			update_parts = "rcw-2 spi-flash";
+		};
+		v3 {
+			description = "full SPI flash install with RCW sl28-2-22__";
+			update_parts = "rcw-3 spi-flash";
+		};
+		v4 {
+			description = "full SPI flash install with RCW sl28-3-11_q";
+			update_parts = "rcw-4 spi-flash";
+		};
+		v5 {
+			description = "full SPI flash install with RCW sl28-3-1s_q";
+			update_parts = "rcw-5 spi-flash";
+		};
+		v6 {
+			description = "full SPI flash install with RCW sl28-3-22_q";
+			update_parts = "rcw-6 spi-flash";
+		};
+		v7 {
+			description = "full SPI flash install with RCW sl28-4-11_q";
+			update_parts = "rcw-7 spi-flash";
+		};
+		v8 {
+			description = "full SPI flash install with RCW sl28-4-1s_q";
+			update_parts = "rcw-8 spi-flash";
+		};
+		v9 {
+			description = "full SPI flash install with RCW sl28-4-22_q";
+			update_parts = "rcw-9 spi-flash";
+		};
+		v0 {
+			description = "u-boot and dp-firmware update with RCW sl28-3-11_q";
+			update_parts = "rcw-4 u-boot dp-firmware";
+		};
+	};
+};
+

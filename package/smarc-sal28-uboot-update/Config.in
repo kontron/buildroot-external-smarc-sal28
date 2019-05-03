@@ -1,0 +1,11 @@
+config BR2_PACKAGE_SMARC_SAL28_UBOOT_UPDATE
+	bool "SMARC sAL28 Uboot Update"
+	help
+	  When selected the bootloader update package is built. This contains all
+          binary image blobs required for bootloader and RCW update as well as
+          the installation script that copies any of these data to its appropriate
+          storage.
+          The update package is stored as a FIT image. The installation script herein
+          is sourced from u-boot CLI
+          source ${loadaddr}:install
+

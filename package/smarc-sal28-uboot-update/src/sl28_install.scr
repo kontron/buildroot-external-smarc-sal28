@@ -1,0 +1,89 @@
+setenv fdt_addr ${fileaddr}
+fdt addr ${fdt_addr}
+
+echo ''
+# Check if sl28_variant variable has been set
+if test -z "${upd_parts}" && test -z "${sl28_variant}"; then
+	echo "Neither sl28_variant nor upd_parts has been set";
+	echo "";
+	echo "It is possible to define the desired update blobs";
+	echo "in the upd_parts environment variable, e.g.";
+	echo "=> setenv upd_parts rcw-1 u-boot dp-firmware";
+	echo "";
+	echo "Alternatively, sl28_variant can be set to install";
+	echo "a predefined install- or update variant";
+	echo "";
+	echo "Available variants are:"
+	fdt get value variant_list /variants valid_list;
+	for ii in ${variant_list}; do
+		fdt get value desc /variants/${ii} description;
+		echo "${ii} - $desc";
+	done
+	run exitclean;
+	exit;
+else
+	if test -n "${sl28_variant}"; then
+		# if sl28_variant is set, let the variant define
+		# upd_parts
+		setenv upd_parts;
+		fdt get value upd_parts /variants/${sl28_variant} update_parts
+		if test $? != 0; then run exitfail; exit; fi
+	fi
+fi
+
+setenv exitfail 'echo update failed - ${exitreason}; run exitclean'
+setenv exitpass 'echo update passed; run exitclean'
+setenv exitclean							\
+	'setenv part; setenv upd_dest; setenv upd_parts;'		\
+	'setenv fdt_addr; setenv spi_offset; setenv spi_addr;'		\
+	'setenv ii; setenv variant_list; setenv exitreason;'		\
+	'setenv exitpass; setenv exitfail; setenv exitclean;'
+
+
+# read update part list from FIT image blob
+setenv exitreason "could not read ${update_parts} node from FIT image blob"
+
+
+for part in ${upd_parts}; do
+	echo "installing $part";
+	setenv exitreason "could not read destination node from ${part}";
+	fdt get value upd_dest /images/${part} destination;
+	if test $? != 0; then run exitfail; exit; fi;
+	if test $upd_dest = "i2c"; then
+		i2c dev 0;
+		imxtract ${fdt_addr} ${part};
+		# check EEPROM contents to avoid unnecessary writing
+		# install RCW
+		i2c read 50 0.2 $filesize 88000000;
+		cmp.b $fileaddr 88000000 $filesize;
+		if test $? = 1; then
+			i2c write $fileaddr 50 0.2 $filesize;
+			echo "checking RCW...";
+			i2c read 50 0.2 $filesize 88000000;
+			cmp.b $fileaddr 88000000 $filesize;
+			if test $? = 1; then
+				setenv exitreason "could not write RCW image into EEPROM";
+				run exitfail;
+				exit;
+			fi
+		fi
+	fi
+	if test $upd_dest = "spi"; then
+		setenv exitreason "could not read offset node from ${part}";
+		fdt get value spi_offset /images/${part} offset;
+		if test $? != 0; then run exitfail; exit; fi;
+		sf probe 0;
+		imxtract ${fdt_addr} ${part};
+		sf update ${fileaddr} ${spi_offset} ${filesize};
+		echo "checking flash image...";
+		setexpr.l spi_addr ${spi_offset} + 0x20000000;
+		cmp.b ${spi_addr} ${fileaddr} ${filesize};
+		if test $? = 1; then
+			setenv exitreason "could not write ${part} into SPI flash";
+			run exitfail;
+			exit;
+		fi
+	fi
+done
+
+run exitpass;
