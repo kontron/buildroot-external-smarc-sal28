@@ -9,6 +9,8 @@ SMARC_SAL28_RCW_VARIANT = $(call qstrip,$(BR2_PACKAGE_SMARC_SAL28_RCW_VARIANT))
 
 define SMARC_SAL28_RCW_INSTALL_IMAGES_CMDS
 	cp $(@D)/sl28-$(SMARC_SAL28_RCW_VARIANT).bin $(BINARIES_DIR)/rcw.bin
+	mkdir $(BINARIES_DIR)/rcw
+	cp $(@D)/sl28-*.bin $(BINARIES_DIR)/rcw/
 endef
 
 $(eval $(generic-package))
