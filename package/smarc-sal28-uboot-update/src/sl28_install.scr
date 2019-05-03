@@ -1,6 +1,15 @@
 setenv fdt_addr ${fileaddr}
 fdt addr ${fdt_addr}
 
+setenv exitfail 'echo update failed - ${exitreason}; run exitclean'
+setenv exitpass 'echo update passed; run exitclean'
+setenv exitclean							\
+	'setenv part; setenv upd_dest; setenv upd_parts;'		\
+	'setenv fdt_addr; setenv spi_offset; setenv spi_addr;'		\
+	'setenv ii; setenv variant_list; setenv exitreason;'		\
+	'setenv exitpass; setenv exitfail; setenv exitclean;'
+
+
 echo ''
 # Check if sl28_variant variable has been set
 if test -z "${upd_parts}" && test -z "${sl28_variant}"; then
@@ -30,14 +39,6 @@ else
 		if test $? != 0; then run exitfail; exit; fi
 	fi
 fi
-
-setenv exitfail 'echo update failed - ${exitreason}; run exitclean'
-setenv exitpass 'echo update passed; run exitclean'
-setenv exitclean							\
-	'setenv part; setenv upd_dest; setenv upd_parts;'		\
-	'setenv fdt_addr; setenv spi_offset; setenv spi_addr;'		\
-	'setenv ii; setenv variant_list; setenv exitreason;'		\
-	'setenv exitpass; setenv exitfail; setenv exitclean;'
 
 
 # read update part list from FIT image blob
