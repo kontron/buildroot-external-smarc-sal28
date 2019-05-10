@@ -10,8 +10,8 @@ define SMARC_SAL28_DEVICETREE_BUILD_CMDS
 endef
 
 define SMARC_SAL28_DEVICETREE_INSTALL_IMAGES_CMDS
-	mkdir -p $(BINARIES_DIR)/devicetree
-	$(MAKE) -C $(@D) install-overlays DEVICETREEDIR=$(BINARIES_DIR)/devicetree
+	mkdir -p $(BINARIES_DIR)/overlays
+	$(MAKE) -C $(@D) install-overlays DEVICETREEDIR=$(BINARIES_DIR)/overlays
 endef
 
 $(eval $(generic-package))
