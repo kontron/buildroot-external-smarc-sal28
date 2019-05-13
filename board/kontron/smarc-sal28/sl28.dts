@@ -116,13 +116,7 @@
 };
 
 &mdio0 {
-	phy0: ethernet-phy@4 {
-		reg = <0x4>;
-		// Atheros PHY on RDB seems to cause traffic loss @ 1Gbps w EEE
-		eee-broken-1000t;
-	};
-
-	phy1: ethernet-phy@5 {
+	phy0: ethernet-phy@5 {
 		reg = <0x5>;
 		// Atheros PHY on RDB seems to cause traffic loss @ 1Gbps w EEE
 		eee-broken-1000t;
@@ -130,13 +124,56 @@
 };
 
 &enetc_port0 {
-	phy-handle = <&phy1>;
+	phy-handle = <&phy0>;
 	phy-connection-type = "sgmii";
+	status = "okay";
 };
 
 &enetc_port1 {
-	phy-handle = <&phy0>;
-	phy-connection-type = "rgmii";
+	status = "disabled";
+};
+
+&enetc_port2 {
+	status = "disabled";
+};
+
+&enetc_port3 {
+	status = "disabled";
+};
+
+
+
+/* l2switch ports */
+/* port@4 has no reference in the dtsi.. */
+/ {
+	soc {
+		pcie@1f0000000 {
+			pci@0,5 {
+				switch_port4: port@4 {
+				};
+			};
+		};
+	};
+};
+
+&switch_port0 {
+	status = "disabled";
+};
+
+&switch_port1 {
+	status = "disabled";
+};
+
+&switch_port2 {
+	status = "disabled";
+};
+
+&switch_port3 {
+	status = "disabled";
+};
+
+&switch_port4 {
+	status = "disabled";
 };
 
 &edp {
