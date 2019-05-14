@@ -58,16 +58,19 @@ that the first half of the SPI flash is usually write protected and can not
 be programmed. Just write the second half of the image. This section will
 contain the standard bootloader which is started by default.
 
-The `images/emmc.img` contains an image which can be transferred to the
-eMMC on the board. It contains two partitions, one which holds the kernel
-and device trees and one for the root filesystem. The boot partition also
-contains a boot.cmd script which is automatically started by the
-bootloader.
+The `images/sdcard-emmc.img` contains an image which can be transferred to the
+eMMC on the board as well as to an SD card. It contains two partitions, one
+which holds the kernel and device trees and one for the root filesystem.
+The boot partition also contains a boot.cmd script which is automatically
+started by the bootloader. Additionally, it conatins a reset configuration
+word (RCW) as well as a bootloader. These are loaded during SDHC boot (see
+next paragraph) or during eMMC boot. For normal SPI boot these two
+components are not needed.
 
-The `images/sd-card.img` contains an image which can be transferred to a SD
-card. Use the SMARC test mode to enable SDHC boot. This is a last resort
-booting mechanism which does not depend on any other flash content on the
-board and works in every case.
+This image can also be used for SDHC boot. Use the SMARC test mode to
+enable it. This is a last resort booting mechanism which does not depend on
+any other flash content on the board and works in every case.
+
 
 ## Booting the board
 
