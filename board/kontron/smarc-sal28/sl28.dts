@@ -99,6 +99,10 @@
 	status = "okay";
 };
 
+&lpuart1 {
+	status = "okay";
+};
+
 &can0 {
 	status = "okay";
 };
