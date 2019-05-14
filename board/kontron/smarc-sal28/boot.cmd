@@ -1,4 +1,4 @@
-setenv bootargs root=/dev/mmcblk${devnum}p2 rootwait default_hugepagesz=2m hugepagesz=2m hugepages=256 video=1920x1080 cma=256M
+setenv bootargs root=/dev/mmcblk${devnum}p2 rootwait default_hugepagesz=2m hugepagesz=2m hugepages=256 video=1920x1080 cma=256M ${extrabootargs}
 
 load ${devtype} ${devnum} ${kernel_addr_r} Image
 load ${devtype} ${devnum} ${fdt_addr_r} sl28.dtb
