@@ -1,0 +1,4 @@
+config BR2_PACKAGE_MIITOOL
+	bool "miitool"
+	help
+	  Handy tool to manipulate PHY registers.
