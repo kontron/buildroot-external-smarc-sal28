@@ -155,6 +155,8 @@
 			pci@0,5 {
 				switch_port4: port@4 {
 				};
+				switch_port5: port@5 {
+				};
 			};
 		};
 	};
@@ -290,6 +292,10 @@
 };
 
 &switch_port4 {
+	status = "disabled";
+};
+
+&switch_port5 {
 	status = "disabled";
 };
 
