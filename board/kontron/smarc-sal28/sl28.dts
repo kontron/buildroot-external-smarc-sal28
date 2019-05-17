@@ -108,7 +108,7 @@
 };
 
 &can1 {
-	status = "okay";
+	status = "disabled";
 };
 
 &sai4 {
