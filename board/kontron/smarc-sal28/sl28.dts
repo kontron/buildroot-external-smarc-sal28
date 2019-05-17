@@ -141,9 +141,10 @@
 	status = "disabled";
 };
 
-&enetc_port3 {
-	status = "disabled";
-};
+/* disabling leads to kernel crash */
+//&enetc_port3 {
+//	status = "disabled";
+//};
 
 
 
