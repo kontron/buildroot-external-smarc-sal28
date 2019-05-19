@@ -3,19 +3,19 @@
 # Kontron SMARC-sAL28 Buildroot External
 
 This [external buildroot layer][1] provides a basic support package for the
-SMARC-sAL28 board. This project provides an extension to buildroot to
-provide this BSP outside of the standard buildroot tree.
+SMARC-sAL28 board. It is an extenstion to buildroot which is provided
+outside of the standard buildroot tree.
 
 The [Kontron SMARC-sAL28][5] board is an upcoming product not yet
 available. This layer does not provide the full functionality of the board.
-Instead it is intented to be used to create a small footprint filesystem
-image as well as being easy to use.
+Instead its intention is to be used to create a small footprint filesystem
+image as well as to be easy to use.
 
 Esp. this layer lacks the following functionalities:
 * 3D GPU support
 * KEAPI
 
-If you need the full functionality use the [Yocto Project][6] layer
+If you need the full functionality it is recommanded to use the [Yocto Project][6] layer
 provided together with the board.
 
 ## Install System Dependencies
@@ -61,11 +61,11 @@ contain the standard bootloader which is started by default.
 The `images/sdcard-emmc.img` contains an image which can be transferred to the
 eMMC on the board as well as to an SD card. It contains two partitions, one
 which holds the kernel and device trees and one for the root filesystem.
-The boot partition also contains a [boot.cmd][7] script which is automatically
-started by the bootloader. Additionally, it conatins a reset configuration
-word (RCW) as well as a bootloader. These are loaded during SDHC boot (see
-next paragraph) or during eMMC boot. For normal SPI boot these two
-components are not needed.
+The boot partition also contains a [boot.cmd][7] script which is started
+automatically by the bootloader. Additionally, it conatins a reset
+configuration word (RCW) as well as a bootloader. These are loaded during
+SDHC boot (see next paragraph) or during eMMC boot. For normal SPI boot
+these two components are not needed.
 
 This image can also be used for SDHC boot. Use the SMARC test mode to
 enable it. This is a last resort booting mechanism which does not depend on
@@ -74,7 +74,7 @@ any other flash content on the board and works in every case.
 
 ## Booting the board
 
-For a details on the boot process of the processor see the documentation of
+For further details about the processor's boot process see the documentation of
 the board in [u-boot][3] and the documentation of the [rcw][4].
 
 ## Further readings
