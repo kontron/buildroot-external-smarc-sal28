@@ -1,0 +1,11 @@
+KMOD_SL28CPLD_VERSION = 6d83a920c8854f7e022004825df9430e50c90a71
+KMOD_SL28CPLD_SITE = $(call github,kontron,kmod-cpld-smarc-sal28,$(KMOD_SL28CPLD_VERSION))
+KMOD_SL28CPLD_LICENSE = GPLv2
+KMOD_SL28CPLD_LICENSE_FILES = COPYING
+
+define KMOD_SL28CPLD_INSTALL_TARGET_CMDS
+	$(INSTALL) -m644 -D $(KMOD_SL28CPLD_PKGDIR)/modules $(TARGET_DIR)/etc/modules.d/sl28cpld
+endef
+
+$(eval $(kernel-module))
+$(eval $(generic-package))

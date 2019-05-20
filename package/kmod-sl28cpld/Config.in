@@ -1,0 +1,5 @@
+config BR2_PACKAGE_KMOD_SL28CPLD
+	bool "kmod-sl28cpld"
+	depends on BR2_LINUX_KERNEL
+	help
+	  Kernel module for the CPLD on the SMARC-sAL28 module.
