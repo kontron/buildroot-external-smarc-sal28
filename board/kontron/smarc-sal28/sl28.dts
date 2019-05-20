@@ -32,28 +32,6 @@
 		regulator-max-microvolt = <1800000>;
 		regulator-always-on;
 	};
-
-	sound {
-		compatible = "simple-audio-card";
-		simple-audio-card,format = "i2s";
-		simple-audio-card,widgets =
-			"Microphone", "Microphone Jack",
-			"Headphone", "Headphone Jack",
-			"Speaker", "Speaker Ext",
-			"Line", "Line In Jack";
-		simple-audio-card,routing =
-			"MIC_IN", "Microphone Jack",
-			"Microphone Jack", "Mic Bias",
-			"LINE_IN", "Line In Jack",
-			"Headphone Jack", "HP_OUT",
-			"Speaker Ext", "LINE_OUT";
-
-		simple-audio-card,cpu {
-			sound-dai = <&sai4>;
-			frame-master;
-			bitclock-master;
-		};
-	};
 };
 
 &esdhc {
@@ -75,6 +53,58 @@
 	rtc@32 {
 		compatible = "microcrystal,rv8803";
 		reg = <0x32>;
+	};
+
+	sl28cpld@4a {
+		#address-cells = <1>;
+		#size-cells = <0>;
+		compatible = "kontron,sl28cpld";
+		reg = <0x4a>;
+
+		watchdog@4 {
+			compatible = "kontron,sl28cpld-wdt";
+			reg = <0x4>;
+		};
+
+		fan@b {
+			compatible = "kontron,sl28cpld-fan";
+			reg = <0xb>;
+		};
+
+		pwm0@c {
+			compatible = "kontron,sl28cpld-pwm";
+			reg = <0xc>;
+		};
+
+		pwm1@e {
+			compatible = "kontron,sl28cpld-pwm";
+			reg = <0xe>;
+		};
+
+		gpio0@10 {
+			compatible = "kontron,sl28cpld-gpio";
+			reg = <0x10>;
+		};
+
+		gpio1@13 {
+			compatible = "kontron,sl28cpld-gpio";
+			reg = <0x13>;
+		};
+
+		gpi0@16 {
+			compatible = "kontron,sl28cpld-gpi";
+			reg = <0x16>;
+		};
+
+		gpo0@17 {
+			compatible = "kontron,sl28cpld-gpo";
+			reg = <0x17>;
+		};
+
+		gpo1@18 {
+			compatible = "kontron,sl28cpld-gpo";
+			reg = <0x18>;
+		};
 	};
 
 	eeprom@50 {
