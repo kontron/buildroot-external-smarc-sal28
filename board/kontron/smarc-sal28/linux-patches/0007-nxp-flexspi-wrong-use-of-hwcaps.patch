@@ -1,0 +1,33 @@
+From 29774c3a5cc1172ab128ba89ca23bf07a8ac62ad Mon Sep 17 00:00:00 2001
+From: Michael Walle <michael.walle@kontron.com>
+Date: Tue, 21 May 2019 18:55:09 +0200
+Subject: [PATCH 2/2] nxp-flexspi: wrong use of hwcaps
+
+hwcaps is initialized with the wrong values. Due to this, the spi-nor
+module will try to access the flash using dual I/O mode, which flexspi
+doesn't support for now. Fix that.
+
+Signed-off-by: Michael Walle <michael.walle@kontron.com>
+---
+ drivers/mtd/spi-nor/nxp-flexspi.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/mtd/spi-nor/nxp-flexspi.c b/drivers/mtd/spi-nor/nxp-flexspi.c
+index 606c004a5356..fa39af79c7eb 100644
+--- a/drivers/mtd/spi-nor/nxp-flexspi.c
++++ b/drivers/mtd/spi-nor/nxp-flexspi.c
+@@ -1172,9 +1172,8 @@ MODULE_DEVICE_TABLE(of, nxp_fspi_dt_ids);
+ static int nxp_fspi_probe(struct platform_device *pdev)
+ {
+ 	struct spi_nor_hwcaps hwcaps = {
+-		.mask = SPINOR_OP_READ_FAST_4B |
+-			SPINOR_OP_READ_4B |
+-			SNOR_HWCAPS_PP
++		.mask = SNOR_HWCAPS_READ_FAST |
++			SNOR_HWCAPS_PP,
+ 	};
+ 	struct device_node *np = pdev->dev.of_node;
+ 	struct device *dev = &pdev->dev;
+-- 
+2.11.0
+

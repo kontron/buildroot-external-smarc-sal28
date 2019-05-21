@@ -1,0 +1,32 @@
+From ba30212f6bb4654ce9e1307521a4af007d242db3 Mon Sep 17 00:00:00 2001
+From: Michael Walle <michael.walle@kontron.com>
+Date: Tue, 21 May 2019 18:52:32 +0200
+Subject: [PATCH 1/2] nxp-flexspi: skip spi_nor_read_sfdp()
+
+The SPI NOR subsystem calls the nor_read() function with the RDSFDP
+opcode. Unfortunately, this doesn't seem to be implemented in the
+flexspi driver for now, which then causes a kernel crash. Check for that
+opcode and return an error for now.
+
+Signed-off-by: Michael Walle <michael.walle@kontron.com>
+---
+ drivers/mtd/spi-nor/nxp-flexspi.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/drivers/mtd/spi-nor/nxp-flexspi.c b/drivers/mtd/spi-nor/nxp-flexspi.c
+index 6aef595c7e01..606c004a5356 100644
+--- a/drivers/mtd/spi-nor/nxp-flexspi.c
++++ b/drivers/mtd/spi-nor/nxp-flexspi.c
+@@ -1075,6 +1075,9 @@ static ssize_t nxp_fspi_read(struct spi_nor *nor, loff_t from,
+ {
+ 	struct nxp_fspi *fspi = nor->priv;
+ 
++	if (nor->read_opcode == SPINOR_OP_RDSFDP)
++		return -ENOTSUPP;
++
+ 	/* if necessary, ioremap buffer before AHB read, */
+ 	if (!fspi->ahb_addr) {
+ 		fspi->memmap_offs = fspi->chip_base_addr + from;
+-- 
+2.11.0
+

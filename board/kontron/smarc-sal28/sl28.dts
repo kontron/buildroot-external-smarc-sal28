@@ -121,6 +121,71 @@
 	status = "okay";
 };
 
+&fspi {
+	status = "okay";
+	w25q32jw@0 {
+		#address-cells = <1>;
+		#size-cells = <1>;
+		compatible = "micron,m25p80";
+		m25p,fast-read;
+		spi-max-frequency = <133000000>;
+		reg = <0>;
+		/* The following setting enables 1-1-2 (CMD-ADDR-DATA) mode */
+		spi-rx-bus-width = <2>; /* 2 SPI Rx lines */
+		spi-tx-bus-width = <1>; /* 1 SPI Tx line */
+
+		partition@0 {
+			reg = <0x000000 0x010000>;
+			label = "rcw";
+		};
+
+		partition@10000 {
+			reg = <0x010000 0x0f0000>;
+			label = "failsafe bootloader";
+		};
+
+		partition@100000 {
+			reg = <0x100000 0x040000>;
+			label = "failsafe DP firmware";
+		};
+
+		partition@140000 {
+			reg = <0x140000 0x0a0000>;
+			label = "failsafe PPA firmware";
+		};
+
+		partition@1e0000 {
+			reg = <0x1e0000 0x020000>;
+			label = "reserved";
+		};
+
+		partition@200000 {
+			reg = <0x200000 0x010000>;
+			label = "configuration store";
+		};
+
+		partition@210000 {
+			reg = <0x210000 0x0f0000>;
+			label = "bootloader";
+		};
+
+		partition@300000 {
+			reg = <0x300000 0x040000>;
+			label = "DP firmware";
+		};
+
+		partition@340000 {
+			reg = <0x340000 0x0a0000>;
+			label = "PPA firmware";
+		};
+
+		partition@3e0000 {
+			reg = <0x3e0000 0x020000>;
+			label = "bootloader environment";
+		};
+	};
+};
+
 &duart0 {
 	status = "okay";
 };
