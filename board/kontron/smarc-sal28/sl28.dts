@@ -399,9 +399,10 @@
 
 &edp {
 	fsl,no_edid;
+	fsl,edp;
 	lane_mapping = <0x4e>;
-	edp_link_rate = <0x6>;
-	edp_num_lanes = <0x4>;
+	edp_link_rate = <0xa>;
+	edp_num_lanes = <0x2>;
 	status = "okay";
 };
 
