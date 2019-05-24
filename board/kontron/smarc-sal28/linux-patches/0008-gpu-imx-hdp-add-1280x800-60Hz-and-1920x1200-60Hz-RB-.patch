@@ -1,0 +1,74 @@
+From d843f992f800b5a3f9250b216b3f18c573e7410e Mon Sep 17 00:00:00 2001
+From: Dmitry Artamonov <dartamonov@dev.rtsoft.ru>
+Date: Mon, 29 Apr 2019 15:12:15 +0300
+Subject: [PATCH] gpu: imx-hdp: add 1280x800@60Hz and 1920x1200@60Hz RB modes
+ support
+
+Signed-off-by: Dmitry Artamonov <dartamonov@dev.rtsoft.ru>
+---
+ drivers/gpu/drm/imx/hdp/imx-hdp.c | 20 ++++++++++++++++++--
+ 1 file changed, 18 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/gpu/drm/imx/hdp/imx-hdp.c b/drivers/gpu/drm/imx/hdp/imx-hdp.c
+index 2127d2989c32..49c50a0e8122 100644
+--- a/drivers/gpu/drm/imx/hdp/imx-hdp.c
++++ b/drivers/gpu/drm/imx/hdp/imx-hdp.c
+@@ -36,11 +36,21 @@ static struct drm_display_mode edid_cea_modes[] = {
+ 		   1430, 1650, 0, 720, 725, 730, 750, 0,
+ 		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
+ 	  .vrefresh = 60, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_16_9, },
++	/* 0x1c - 1280x800@60Hz */
++	{ DRM_MODE("1280x800", DRM_MODE_TYPE_DRIVER, 83500, 1280, 1352,
++		   1480, 1680, 0, 800, 803, 809, 831, 0,
++		   DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_PVSYNC),
++	  .vrefresh = 60, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_16_9, },
+ 	/* 16 - 1920x1080@60Hz */
+ 	{ DRM_MODE("1920x1080", DRM_MODE_TYPE_DRIVER, 148500, 1920, 2008,
+ 		   2052, 2200, 0, 1080, 1084, 1089, 1125, 0,
+ 		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC),
+ 	  .vrefresh = 60, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_16_9, },
++	/* 0x44 - 1920x1200@60Hz RB */
++	{ DRM_MODE("1920x1200", DRM_MODE_TYPE_DRIVER, 154000, 1920, 1968,
++		   2000, 2080, 0, 1200, 1203, 1209, 1235, 0,
++		   DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_NVSYNC),
++	  .vrefresh = 60, .picture_aspect_ratio = HDMI_PICTURE_ASPECT_16_9, },
+ 	/* 97 - 3840x2160@60Hz */
+ 	{ DRM_MODE("3840x2160", DRM_MODE_TYPE_DRIVER, 594000,
+ 		   3840, 4016, 4104, 4400, 0,
+@@ -248,9 +258,15 @@ static void ls1028a_pixel_link_mux(state_struct *state,
+ 	    && mode->vdisplay == 2160)
+ 		val = 0x0402002c;
+ 	else if (mode->hdisplay == 1920
++		 && mode->vdisplay == 1200)
++		val = 0x1002002d;
++	else if (mode->hdisplay == 1920
+ 		 && mode->vdisplay == 1080)
+ 		val = 0x1002002c;
+ 	else if (mode->hdisplay == 1280
++		 && mode->vdisplay == 800)
++		val = 0x1c02002b;
++	else if (mode->hdisplay == 1280
+ 		 && mode->vdisplay == 720)
+ 		val = 0x2002002c;
+ 	else if (mode->hdisplay == 720
+@@ -1043,7 +1059,7 @@ static void hotplug_work_func(struct work_struct *work)
+ 
+ 	if (connector->status == connector_status_connected) {
+ 		/* Cable Connected */
+-		if (drm_mode_equal(&hdp->video.pre_mode, &edid_cea_modes[3]))
++		if (drm_mode_equal(&hdp->video.pre_mode, &edid_cea_modes[5]))
+ 			imx_hdp_mode_setup(hdp, &hdp->video.pre_mode);
+ 		DRM_INFO("HDMI/DP Cable Plug In\n");
+ 		if (hdp->is_hpd_irq)
+@@ -1305,7 +1321,7 @@ static int imx_hdp_imx_bind(struct device *dev, struct device *master,
+ 
+ 	/* Pixel Format - 1 RGB, 2 YCbCr 444, 3 YCbCr 420 */
+ 	/* bpp (bits per subpixel) - 8 24bpp, 10 30bpp, 12 36bpp, 16 48bpp */
+-	ret = imx_hdp_call(hdp, phy_init, &hdp->state, &edid_cea_modes[2],
++	ret = imx_hdp_call(hdp, phy_init, &hdp->state, &edid_cea_modes[3],
+ 			   hdp->format, hdp->bpc);
+ 	if (ret < 0) {
+ 		DRM_ERROR("Failed to initialise HDP PHY\n");
+-- 
+2.11.0
+
