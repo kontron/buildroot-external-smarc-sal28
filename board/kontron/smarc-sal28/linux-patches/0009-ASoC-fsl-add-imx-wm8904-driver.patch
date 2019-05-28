@@ -1,0 +1,273 @@
+From 8a16bcaeb70d4ff55b19f38471d280405e7adb65 Mon Sep 17 00:00:00 2001
+From: Yadviga Grigoryeva <yadviga@dev.rtsoft.ru>
+Date: Fri, 5 Apr 2019 16:14:50 +0300
+Subject: [PATCH] ASoC: fsl: add imx-wm8904 driver
+
+Signed-off-by: Yadviga Grigoryeva <yadviga@dev.rtsoft.ru>
+Signed-off-by: Michael Walle <michael.walle@kontron.com>
+---
+ sound/soc/fsl/Kconfig      |  14 +++-
+ sound/soc/fsl/Makefile     |   2 +
+ sound/soc/fsl/imx-wm8904.c | 198 +++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 213 insertions(+), 1 deletion(-)
+ create mode 100644 sound/soc/fsl/imx-wm8904.c
+
+diff --git a/sound/soc/fsl/Kconfig b/sound/soc/fsl/Kconfig
+index 37f9b6201918..e081895f4703 100644
+--- a/sound/soc/fsl/Kconfig
++++ b/sound/soc/fsl/Kconfig
+@@ -81,7 +81,7 @@ config SND_POWERPC_SOC
+ 
+ config SND_IMX_SOC
+ 	tristate "SoC Audio for Freescale i.MX CPUs"
+-	depends on ARCH_MXC || COMPILE_TEST
++	depends on ARCH_MXC || COMPILE_TEST || ARM64
+ 	help
+ 	  Say Y or M if you want to add support for codecs attached to
+ 	  the i.MX CPUs.
+@@ -282,6 +282,18 @@ config SND_SOC_IMX_MC13783
+ 	select SND_SOC_MC13783
+ 	select SND_SOC_IMX_PCM_DMA
+ 
++config SND_SOC_IMX_WM8904
++        tristate "SoC Audio support for i.MX boards with wm8904"
++        depends on OF && I2C
++        select SND_SOC_WM8904
++        select SND_SOC_IMX_PCM_DMA
++        select SND_SOC_FSL_SAI
++        select SND_SOC_FSL_UTILS
++        help
++          SoC Audio support for i.MX boards with WM8904
++          Say Y if you want to add support for SoC audio on an i.MX board with
++          a wm8904 codec.
++
+ config SND_SOC_FSL_ASOC_CARD
+ 	tristate "Generic ASoC Sound Card with ASRC support"
+ 	depends on OF && I2C
+diff --git a/sound/soc/fsl/Makefile b/sound/soc/fsl/Makefile
+index c67bf1139e1e..bc0bd7280f61 100644
+--- a/sound/soc/fsl/Makefile
++++ b/sound/soc/fsl/Makefile
+@@ -58,6 +58,7 @@ snd-soc-imx-sgtl5000-objs := imx-sgtl5000.o
+ snd-soc-imx-wm8962-objs := imx-wm8962.o
+ snd-soc-imx-spdif-objs := imx-spdif.o
+ snd-soc-imx-mc13783-objs := imx-mc13783.o
++snd-soc-imx-wm8904-objs := imx-wm8904.o
+ 
+ obj-$(CONFIG_SND_SOC_EUKREA_TLV320) += snd-soc-eukrea-tlv320.o
+ obj-$(CONFIG_SND_SOC_PHYCORE_AC97) += snd-soc-phycore-ac97.o
+@@ -65,6 +66,7 @@ obj-$(CONFIG_SND_SOC_MX27VIS_AIC32X4) += snd-soc-mx27vis-aic32x4.o
+ obj-$(CONFIG_SND_MXC_SOC_WM1133_EV1) += snd-soc-wm1133-ev1.o
+ obj-$(CONFIG_SND_SOC_IMX_ES8328) += snd-soc-imx-es8328.o
+ obj-$(CONFIG_SND_SOC_IMX_SGTL5000) += snd-soc-imx-sgtl5000.o
++obj-$(CONFIG_SND_SOC_IMX_WM8904) += snd-soc-imx-wm8904.o
+ obj-$(CONFIG_SND_SOC_IMX_WM8962) += snd-soc-imx-wm8962.o
+ obj-$(CONFIG_SND_SOC_IMX_SPDIF) += snd-soc-imx-spdif.o
+ obj-$(CONFIG_SND_SOC_IMX_MC13783) += snd-soc-imx-mc13783.o
+diff --git a/sound/soc/fsl/imx-wm8904.c b/sound/soc/fsl/imx-wm8904.c
+new file mode 100644
+index 000000000000..2bdd0fd9098b
+--- /dev/null
++++ b/sound/soc/fsl/imx-wm8904.c
+@@ -0,0 +1,198 @@
++/*
++ * Copyright (C) 2015-2017 Freescale Semiconductor, Inc.
++ *
++ * The code contained herein is licensed under the GNU General Public
++ * License. You may obtain a copy of the GNU General Public License
++ * Version 2 or later at the following locations:
++ *
++ * http://www.opensource.org/licenses/gpl-license.html
++ * http://www.gnu.org/copyleft/gpl.html
++ */
++
++#include <linux/module.h>
++#include <linux/of_platform.h>
++#include <linux/i2c.h>
++#include <linux/of_gpio.h>
++#include <linux/slab.h>
++#include <linux/gpio.h>
++#include <linux/clk.h>
++#include <sound/soc.h>
++#include <sound/jack.h>
++#include <sound/control.h>
++#include <sound/pcm_params.h>
++#include <sound/soc-dapm.h>
++#include <linux/pinctrl/consumer.h>
++#include <linux/mfd/syscon.h>
++#include "../codecs/wm8904.h"
++#include "fsl_sai.h"
++
++struct imx_wm8904_data {
++	struct device *dev;
++	struct snd_soc_dai_link dai;
++	struct snd_soc_card card;
++	struct clk *mclk;
++};
++
++static int imx_wm8904_hw_params(struct snd_pcm_substream *substream,
++		struct snd_pcm_hw_params *params)
++{
++	struct snd_soc_pcm_runtime *rtd = substream->private_data;
++	struct imx_wm8904_data *data = snd_soc_card_get_drvdata(rtd->card);
++	struct snd_soc_dai *dai = rtd->codec_dai;
++	int ret;
++
++	ret = snd_soc_dai_set_pll(dai, WM8904_FLL_MCLK, WM8904_FLL_MCLK,
++				  clk_get_rate(data->mclk),
++				  params_rate(params) * 256);
++	if (ret < 0) {
++		dev_err(dai->dev, "Failed to set wm8904 codec PLL.\n");
++		return ret;
++	}
++
++	/*
++	 * As here wm8904 use FLL output as its system clock
++	 * so calling set_sysclk won't care freq parameter
++	 * then we pass 0
++	 */
++	ret = snd_soc_dai_set_sysclk(dai, WM8904_CLK_FLL,
++				     0, SND_SOC_CLOCK_IN);
++	if (ret < 0) {
++		dev_err(dai->dev, "Failed to set wm8904 SYSCLK.\n");
++		return ret;
++	}
++
++	return 0;
++}
++
++static const struct snd_soc_ops imx_wm8904_ops = {
++	.hw_params = imx_wm8904_hw_params,
++};
++
++static const struct snd_soc_dapm_widget imx_wm8904_dapm_widgets[] = {
++	SND_SOC_DAPM_LINE("Line In Jack", NULL),
++	SND_SOC_DAPM_SPK("Line Out Jack", NULL),
++	SND_SOC_DAPM_HP("Headphone Jack", NULL),
++	SND_SOC_DAPM_MIC("Mic Jack", NULL),
++};
++
++static void imx_wm8904_init_dai(struct snd_soc_dai_link *dai)
++{
++	dai->name = "WM8904";
++	dai->stream_name = "WM8904 PCM";
++	dai->codec_dai_name = "wm8904-hifi";
++	dai->dai_fmt = SND_SOC_DAIFMT_I2S
++		       | SND_SOC_DAIFMT_NB_NF
++		       | SND_SOC_DAIFMT_CBM_CFM;
++	dai->ops = &imx_wm8904_ops;
++}
++
++static void imx_wm8904_init_card(struct snd_soc_card *card)
++{
++	card->name = "atmel_asoc_wm8904";
++	card->owner = THIS_MODULE;
++	card->num_links = 1;
++	card->dapm_widgets = imx_wm8904_dapm_widgets;
++	card->num_dapm_widgets = ARRAY_SIZE(imx_wm8904_dapm_widgets);
++}
++
++static int imx_wm8904_probe(struct platform_device *pdev)
++{
++	struct device_node *cpu_np, *codec_np, *np = pdev->dev.of_node;
++	struct snd_soc_dai_link *dai;
++	struct snd_soc_card *card;
++	struct i2c_client *codec_dev;
++	struct imx_wm8904_data *data;
++	int ret = -EINVAL;
++
++	cpu_np = of_parse_phandle(np, "sound-dai", 0);
++	codec_np = of_parse_phandle(np, "audio-codec", 0);
++	if (!cpu_np || !codec_np) {
++		dev_err(&pdev->dev, "phandle missing or invalid\n");
++		goto err;
++	}
++
++	codec_dev = of_find_i2c_device_by_node(codec_np);
++	if (!codec_dev || !codec_dev->dev.driver) {
++		dev_err(&pdev->dev, "Failed to find codec platform device.\n");
++		goto err;
++	}
++
++	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
++	if (!data) {
++		ret = -ENOMEM;
++		goto err;
++	}
++	dai = &data->dai;
++	card = &data->card;
++
++	data->mclk = devm_clk_get(&codec_dev->dev, "mclk");
++	if (IS_ERR(data->mclk)) {
++		ret = PTR_ERR(data->mclk);
++		dev_err(&pdev->dev, "Failed to get MCLK (%d).\n", ret);
++		goto err;
++	}
++
++	imx_wm8904_init_dai(dai);
++	imx_wm8904_init_card(card);
++
++	dai->codec_of_node = codec_np;
++	dai->cpu_of_node = cpu_np;
++	dai->platform_of_node = cpu_np;
++
++	ret = snd_soc_of_get_dai_name(np, &dai->cpu_dai_name);
++	if (ret) {
++		dev_err(&pdev->dev, "error getting cpu dai name\n");
++		goto err;
++	}
++
++	card->dai_link = dai;
++	card->dev = &pdev->dev;
++	card->owner = THIS_MODULE;
++
++	ret = snd_soc_of_parse_card_name(card, "model");
++	if (ret)
++		goto err;
++
++	ret = snd_soc_of_parse_audio_routing(card, "audio-routing");
++	if (ret)
++		goto err;
++
++	snd_soc_card_set_drvdata(card, data);
++
++	ret = devm_snd_soc_register_card(&pdev->dev, &data->card);
++	if (ret) {
++		dev_err(&pdev->dev, "Failed to register sound card (%d)\n", ret);
++		goto err;
++	}
++
++	return 0;
++
++err:
++	of_node_put(cpu_np);
++	of_node_put(codec_np);
++
++	return ret;
++}
++
++static const struct of_device_id imx_wm8904_dt_ids[] = {
++	{.compatible = "fsl,imx-audio-wm8904",},
++	{ /* sentinel */ }
++};
++
++MODULE_DEVICE_TABLE(of, imx_wm8904_dt_ids);
++
++static struct platform_driver imx_wm8904_driver = {
++	.driver = {
++		   .name = "imx-wm8904",
++		   .pm = &snd_soc_pm_ops,
++		   .of_match_table = imx_wm8904_dt_ids,
++		   },
++	.probe = imx_wm8904_probe,
++};
++
++module_platform_driver(imx_wm8904_driver);
++
++MODULE_AUTHOR("Yadviga Grigoryeva");
++MODULE_DESCRIPTION("Freescale i.MX WM8904 ASoC machine driver");
++MODULE_LICENSE("GPL v2");
++MODULE_ALIAS("platform:imx-wm8904");
+-- 
+2.11.0
+
