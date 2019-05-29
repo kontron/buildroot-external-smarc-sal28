@@ -18,20 +18,6 @@
 	chosen {
 		stdout-path = "serial0:115200n8";
 	};
-
-	sys_mclk: clock-mclk {
-		compatible = "fixed-clock";
-		#clock-cells = <0>;
-		clock-frequency = <25000000>;
-	};
-
-	reg_1p8v: regulator-1p8v {
-		compatible = "regulator-fixed";
-		regulator-name = "1P8V";
-		regulator-min-microvolt = <1800000>;
-		regulator-max-microvolt = <1800000>;
-		regulator-always-on;
-	};
 };
 
 &esdhc {
@@ -371,6 +357,49 @@
 			};
 		};
 	};
+
+	/* add missing sai nodes */
+	sai3: sai@f120000 {
+		#sound-dai-cells = <0>;
+		compatible = "fsl,vf610-sai";
+		reg = <0x0 0xf120000 0x0 0x10000>;
+		interrupts = <0 83 0x4>;
+		clocks = <&clockgen 4 0>, <&clockgen 4 1>,
+			 <&clockgen 4 1>, <&clockgen 4 1>;
+		clock-names = "bus", "mclk1", "mclk2", "mclk3";
+		dma-names = "tx", "rx";
+		dmas = <&edma0 1 8>,
+		       <&edma0 1 7>;
+		status = "disabled";
+	};
+
+	sai5: sai@f140000 {
+		#sound-dai-cells = <0>;
+		compatible = "fsl,vf610-sai";
+		reg = <0x0 0xf140000 0x0 0x10000>;
+		interrupts = <0 84 0x4>;
+		clocks = <&clockgen 4 0>, <&clockgen 4 1>,
+			 <&clockgen 4 1>, <&clockgen 4 1>;
+		clock-names = "bus", "mclk1", "mclk2", "mclk3";
+		dma-names = "tx", "rx";
+		dmas = <&edma0 1 12>,
+		       <&edma0 1 11>;
+		status = "disabled";
+	};
+
+	sai6: sai@f150000 {
+		#sound-dai-cells = <0>;
+		compatible = "fsl,vf610-sai";
+		reg = <0x0 0xf150000 0x0 0x10000>;
+		interrupts = <0 84 0x4>;
+		clocks = <&clockgen 4 0>, <&clockgen 4 1>,
+			 <&clockgen 4 1>, <&clockgen 4 1>;
+		clock-names = "bus", "mclk1", "mclk2", "mclk3";
+		dma-names = "tx", "rx";
+		dmas = <&edma0 1 14>,
+		       <&edma0 1 13>;
+		status = "disabled";
+	};
 };
 
 &switch_port0 {
@@ -398,11 +427,7 @@
 };
 
 &edp {
-	fsl,no_edid;
-	fsl,edp;
 	lane_mapping = <0x4e>;
-	edp_link_rate = <0xa>;
-	edp_num_lanes = <0x2>;
 	status = "okay";
 };
 
