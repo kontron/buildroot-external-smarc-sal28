@@ -1,4 +1,4 @@
-From 8a16bcaeb70d4ff55b19f38471d280405e7adb65 Mon Sep 17 00:00:00 2001
+From 61f66df5588ad03cc8e3f0d1f7ed0cc44eddc5d3 Mon Sep 17 00:00:00 2001
 From: Yadviga Grigoryeva <yadviga@dev.rtsoft.ru>
 Date: Fri, 5 Apr 2019 16:14:50 +0300
 Subject: [PATCH] ASoC: fsl: add imx-wm8904 driver
@@ -13,7 +13,7 @@ Signed-off-by: Michael Walle <michael.walle@kontron.com>
  create mode 100644 sound/soc/fsl/imx-wm8904.c
 
 diff --git a/sound/soc/fsl/Kconfig b/sound/soc/fsl/Kconfig
-index 37f9b6201918..e081895f4703 100644
+index 37f9b6201918..d8aeb09fafa5 100644
 --- a/sound/soc/fsl/Kconfig
 +++ b/sound/soc/fsl/Kconfig
 @@ -81,7 +81,7 @@ config SND_POWERPC_SOC
@@ -21,7 +21,7 @@ index 37f9b6201918..e081895f4703 100644
  config SND_IMX_SOC
  	tristate "SoC Audio for Freescale i.MX CPUs"
 -	depends on ARCH_MXC || COMPILE_TEST
-+	depends on ARCH_MXC || COMPILE_TEST || ARM64
++	depends on ARCH_MXC || ARCH_LAYERSCAPE || COMPILE_TEST
  	help
  	  Say Y or M if you want to add support for codecs attached to
  	  the i.MX CPUs.
