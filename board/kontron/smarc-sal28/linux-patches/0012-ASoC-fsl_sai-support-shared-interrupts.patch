@@ -1,0 +1,29 @@
+From e67680b1af23e3e953842a36b91eae233fff7922 Mon Sep 17 00:00:00 2001
+From: Michael Walle <michael.walle@kontron.com>
+Date: Wed, 5 Jun 2019 18:29:07 +0200
+Subject: [PATCH 3/3] ASoC: fsl_sai: support shared interrupts
+
+The LS1028A SoC shares interrupts between SAIs.
+
+Signed-off-by: Michael Walle <michael.walle@kontron.com>
+---
+ sound/soc/fsl/fsl_sai.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/sound/soc/fsl/fsl_sai.c b/sound/soc/fsl/fsl_sai.c
+index 44ea7bb5f4c9..36658572f8fe 100644
+--- a/sound/soc/fsl/fsl_sai.c
++++ b/sound/soc/fsl/fsl_sai.c
+@@ -853,7 +853,8 @@ static int fsl_sai_probe(struct platform_device *pdev)
+ 		return irq;
+ 	}
+ 
+-	ret = devm_request_irq(&pdev->dev, irq, fsl_sai_isr, 0, np->name, sai);
++	ret = devm_request_irq(&pdev->dev, irq, fsl_sai_isr, IRQF_SHARED,
++			       np->name, sai);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "failed to claim irq %u\n", irq);
+ 		return ret;
+-- 
+2.11.0
+
