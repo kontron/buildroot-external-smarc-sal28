@@ -1,5 +1,9 @@
 config BR2_PACKAGE_TSNTOOL
 	bool "tsntool"
+	select BR2_PACKAGE_LIBNL
+	select BR2_PACKAGE_READLINE
+	select BR2_PACKAGE_NCURSES
+	select BR2_PACKAGE_CJSON
 	help
 	  tsntool is a tool to configure TSN funtionalities in user space.
 	  It can be used for TSN endpoint and TSN switch using netlink
