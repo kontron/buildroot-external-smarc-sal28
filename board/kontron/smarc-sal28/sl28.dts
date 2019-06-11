@@ -52,6 +52,11 @@
 			reg = <0x4>;
 		};
 
+		gpi0@9 {
+			compatible = "kontron,sl28cpld-gpi";
+			reg = <0x9>;
+		};
+
 		fan@b {
 			compatible = "kontron,sl28cpld-fan";
 			reg = <0xb>;
@@ -77,19 +82,14 @@
 			reg = <0x13>;
 		};
 
-		gpi0@16 {
-			compatible = "kontron,sl28cpld-gpi";
+		gpo0@16 {
+			compatible = "kontron,sl28cpld-gpo";
 			reg = <0x16>;
 		};
 
-		gpo0@17 {
+		gpo1@17 {
 			compatible = "kontron,sl28cpld-gpo";
 			reg = <0x17>;
-		};
-
-		gpo1@18 {
-			compatible = "kontron,sl28cpld-gpo";
-			reg = <0x18>;
 		};
 	};
 
