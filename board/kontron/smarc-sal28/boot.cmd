@@ -1,4 +1,16 @@
-setenv bootargs root=/dev/mmcblk${devnum}p2 rootwait default_hugepagesz=2m hugepagesz=2m hugepages=256 video=1920x1080 cma=256M ${extrabootargs}
+if test "${devtype}" = "mmc"; then
+	echo "Root File Sytem on MMC"
+	setenv rootfs /dev/mmcblk${devnum}p2
+elif test "${devtype}" = "usb"; then
+	echo "Root File Sytem on USB"
+	setenv rootfs /dev/sda2
+elif test "${devtype}" = "nvme"; then
+	echo "Root File System on NVMe "
+	setenv rootfs /dev/nvme${devnum}n1p2
+	sleep 2
+fi
+
+setenv bootargs root=${rootfs} rootwait default_hugepagesz=2m hugepagesz=2m hugepages=256 video=1920x1080 cma=256M ${extrabootargs}
 
 load ${devtype} ${devnum} ${kernel_addr_r} Image
 load ${devtype} ${devnum} ${fdt_addr_r} sl28.dtb
