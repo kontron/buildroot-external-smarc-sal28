@@ -4,6 +4,7 @@
 
 /dts-v1/;
 #include "freescale/fsl-ls1028a.dtsi"
+#include <dt-bindings/gpio/gpio.h>
 
 / {
 	model = "Kontron SMARC-sAL28";
@@ -17,6 +18,11 @@
 
 	chosen {
 		stdout-path = "serial0:115200n8";
+	};
+
+	emmc_pwrseq: emmc-pwrseq {
+		compatible = "mmc-pwrseq-simple";
+		reset-gpios = <&cpld_gpo0 2 GPIO_ACTIVE_LOW>;
 	};
 };
 
@@ -32,6 +38,7 @@
 	status = "okay";
 	bus-width = <8>;
 	mmc-hs200-1_8v;
+	mmc-pwrseq = <&emmc_pwrseq>;
 };
 
 &i2c0 {
@@ -52,11 +59,6 @@
 			reg = <0x4>;
 		};
 
-		gpi0@9 {
-			compatible = "kontron,sl28cpld-gpi";
-			reg = <0x9>;
-		};
-
 		fan@b {
 			compatible = "kontron,sl28cpld-fan";
 			reg = <0xb>;
@@ -74,24 +76,48 @@
 			reg = <0xe>;
 		};
 
-		gpio0@10 {
+		cpld_gpio0: gpio0@10 {
 			compatible = "kontron,sl28cpld-gpio";
 			reg = <0x10>;
+			gpio-controller;
+			#gpio-cells = <2>;
+			gpio-line-names =
+				"GPIO0_CAM0_PWR_N", "GPIO1_CAM1_PWR_N",
+				"GPIO2_CAM0_RST_N", "GPIO3_CAM1_RST_N",
+				"GPIO4_HDA_RST_N", "GPIO5_PWM_OUT",
+				"GPIO6_TACHIN", "GPIO7";
 		};
 
-		gpio1@13 {
+		cpld_gpio1: gpio1@13 {
 			compatible = "kontron,sl28cpld-gpio";
 			reg = <0x13>;
+			gpio-controller;
+			#gpio-cells = <2>;
+			gpio-line-names =
+				"GPIO8", "GPIO9", "GPIO10", "GPIO11",
+				"", "", "", "";
 		};
 
-		gpo0@16 {
+		cpld_gpo0: gpo0@16 {
 			compatible = "kontron,sl28cpld-gpo";
 			reg = <0x16>;
+			gpio-controller;
+			#gpio-cells = <2>;
+			gpio-line-names =
+				"LCD0 voltage enable", "LCD0 backlight enable",
+				"eMMC reset", "LVDS bridge reset",
+				"LVDS bridge power-down", "SDIO power enable",
+				"", "";
 		};
 
-		gpo1@17 {
-			compatible = "kontron,sl28cpld-gpo";
+		cpld_gpi0: gpi0@17 {
+			compatible = "kontron,sl28cpld-gpi";
 			reg = <0x17>;
+			gpio-controller;
+			#gpio-cells = <2>;
+			gpio-line-names =
+				"Power button", "Force recovery", "Sleep", "Battery low",
+				"Lid state", "Charging", "Charger present", "";
 		};
 	};
 
@@ -120,7 +146,7 @@
 	w25q32jw@0 {
 		#address-cells = <1>;
 		#size-cells = <1>;
-		compatible = "micron,m25p80";
+		compatible = "w25q32jw", "jedec,spi-nor";
 		m25p,fast-read;
 		spi-max-frequency = <133000000>;
 		reg = <0>;
@@ -262,4 +288,20 @@
 
 &sata {
 	status = "okay";
+};
+
+&gpio0 {
+	gpio-line-names =
+		"", "", "", "", "", "", "", "",
+		"", "", "", "", "", "", "TDO", "TCK",
+		"", "", "", "", "", "", "", "",
+		"", "", "", "", "", "", "", "";
+};
+
+&gpio1 {
+	gpio-line-names =
+		"", "", "", "", "", "", "", "",
+		"", "", "", "", "", "", "", "",
+		"", "", "", "", "", "", "", "",
+		"", "", "", "", "", "", "TMS", "TDI";
 };
