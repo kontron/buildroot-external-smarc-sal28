@@ -22,7 +22,7 @@
 
 	emmc_pwrseq: emmc-pwrseq {
 		compatible = "mmc-pwrseq-simple";
-		reset-gpios = <&cpld_gpo0 2 GPIO_ACTIVE_LOW>;
+		reset-gpios = <&cpld_gpo0 2 GPIO_ACTIVE_HIGH>;
 	};
 };
 
