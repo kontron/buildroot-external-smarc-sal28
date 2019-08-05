@@ -48,7 +48,7 @@
 		reg = <0x32>;
 	};
 
-	sl28cpld@4a {
+	sl28cpld: sl28cpld@4a {
 		#address-cells = <1>;
 		#size-cells = <0>;
 		compatible = "kontron,sl28cpld";
