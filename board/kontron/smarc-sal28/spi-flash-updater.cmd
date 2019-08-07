@@ -51,11 +51,22 @@ else
 fi
 
 echo "Loading image.."
-load ${devtype} ${devnum} ${loadaddr} spi-flash.img - ${offset}
+load ${devtype} ${devnum} ${loadaddr} spi-flash.img
 if test $? -ne 0; then
 	echo "Loading image failed. Aborting"
 	exit 1
 fi
+
+echo "Verify checksum.."
+setenv spi-flash.img.sha1 %SHA1CHECKSUM%
+hash -v sha1 ${fileaddr} ${filesize} ${spi-flash.img.sha1}
+if test $? -ne 0; then
+	echo "Verify image checksum failed. Aborting"
+	exit 1
+fi
+
+setexpr imageaddr ${fileaddr} + ${offset}
+setexpr imagesize ${filesize} - ${offset}
 
 echo "Writing SPI flash.."
 sf probe 0
@@ -63,7 +74,8 @@ if test $? -ne 0; then
 	echo "Probing SPI flash failed. Aborting"
 	exit 1
 fi
-sf update ${fileaddr} ${offset} ${filesize}
+
+sf update ${imageaddr} ${offset} ${imagesize}
 if test $? -ne 0; then
 	echo "Updating SPI flash failed. Aborting"
 	exit 1
