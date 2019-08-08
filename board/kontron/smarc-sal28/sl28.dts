@@ -43,6 +43,12 @@
 
 &i2c0 {
 	status = "okay";
+	/* DMA is broken for now (maybe just a driver issue). If the device
+	 * answers with a NAK, the DMA engine will not return and the I2C
+	 * driver will wait for a huge 1000ms timeout. This breaks the at24
+	 * driver for example. So disable the DMA engine for now. */
+	dma-names = <>;
+
 	rtc@32 {
 		compatible = "microcrystal,rv8803";
 		reg = <0x32>;
@@ -124,18 +130,33 @@
 	eeprom@50 {
 		compatible = "atmel,24c32";
 		reg = <0x50>;
+		pagesize = <32>;
 	};
 };
 
 &i2c3 {
 	status = "okay";
+
+	/* DMA is broken for now (maybe just a driver issue). If the device
+	 * answers with a NAK, the DMA engine will not return and the I2C
+	 * driver will wait for a huge 1000ms timeout. This breaks the at24
+	 * driver for example. So disable the DMA engine for now. */
+	dma-names = <>;
 };
 
 &i2c4 {
 	status = "okay";
+
+	/* DMA is broken for now (maybe just a driver issue). If the device
+	 * answers with a NAK, the DMA engine will not return and the I2C
+	 * driver will wait for a huge 1000ms timeout. This breaks the at24
+	 * driver for example. So disable the DMA engine for now. */
+	dma-names = <>;
+
 	eeprom@50 {
 		compatible = "atmel,24c32";
 		reg = <0x50>;
+		pagesize = <32>;
 	};
 };
 
