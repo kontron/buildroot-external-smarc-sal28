@@ -61,7 +61,7 @@ contain the standard bootloader which is started by default.
 The `images/sdcard-emmc.img` contains an image which can be transferred to the
 eMMC on the board as well as to an SD card. It contains two partitions, one
 which holds the kernel and device trees and one for the root filesystem.
-The boot partition also contains a boot.cmd script which is automatically
+The boot partition also contains a [boot.cmd][7] script which is automatically
 started by the bootloader. Additionally, it conatins a reset configuration
 word (RCW) as well as a bootloader. These are loaded during SDHC boot (see
 next paragraph) or during eMMC boot. For normal SPI boot these two
@@ -95,3 +95,4 @@ the `COPYING` file for more information. Buildroot is licensed under the
 [4]: https://github.com/kontron/rcw-smarc-sal28/blob/master/README.md
 [5]: https://www.kontron.de/products/boards-and-standard-form-factors/smarc/smarc-sal28.html
 [6]: https://www.yoctoproject.org/
+[7]: https://github.com/kontron/buildroot-external-smarc-sal28/blob/master/docs/boot.cmd.md
