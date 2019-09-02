@@ -5,11 +5,6 @@
 #
 # non_interactive_update
 #   Set to any value to skip any user input.
-#
-# full_spi_update
-#   Set to any value to update the whole SPI flash. Please note,
-#   that by default, the first 2 MiB of the SPI flash is
-#   write-protected and cannot be written.
 
 # running u-boot version is only valid if there was a normal boot-up. During
 # failsafe boot we would get the failsafe bootloader verion. This would
@@ -41,14 +36,8 @@ if test -z "${non_interactive_update}"; then
 	fi
 fi
 
-if test -n "${full_spi_update}"; then
-	echo "Updating complete SPI flash.."
-	setenv offset 0
-else
-	# only second half of SPI flash
-	echo "Updating user-writable part of SPI flash.."
-	setenv offset 200000
-fi
+# only second half of SPI flash
+setenv offset 200000
 
 echo "Loading image.."
 load ${devtype} ${devnum} ${loadaddr} spi-flash.img
