@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-TSNTOOL_VERSION = ls1028a-early-access-bsp0.3
+TSNTOOL_VERSION = LSDK-19.09
 TSNTOOL_SITE = https://source.codeaurora.org/external/qoriq/qoriq-components/tsntool
 TSNTOOL_SITE_METHOD = git
 TSNTOOL_LICENSE = MIT or GPL-2.0+
