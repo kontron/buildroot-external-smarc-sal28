@@ -17,13 +17,11 @@ define TSNTOOL_BUILD_CMDS
 endef
 
 define TSNTOOL_INSTALL_STAGING_CMDS
-	$(INSTALL) -D -m 0644 $(@D)/include/tsn/genl_tsn.h $(STAGING_DIR)/usr/include/tsn/genl_tsn.h
-	$(INSTALL) -D -m 0644 $(@D)/libtsn.so $(STAGING_DIR)/usr/lib/libtsn.so
+	$(MAKE) $(TARGET_CONFIGURE_OPTS) -C $(@D) DESTDIR=$(STAGING_DIR) install
 endef
 
 define TSNTOOL_INSTALL_TARGET_CMDS
-	$(INSTALL) -D -m 0644 $(@D)/libtsn.so $(TARGET_DIR)/usr/lib/libtsn.so
-	$(INSTALL) -D -m 0755 $(@D)/tsntool $(TARGET_DIR)/usr/bin/tsntool
+	$(MAKE) $(TARGET_CONFIGURE_OPTS) -C $(@D) DESTDIR=$(TARGET_DIR) install
 endef
 
 $(eval $(generic-package))

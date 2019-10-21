@@ -1,0 +1,80 @@
+From c579ddd021ad2e25e3a7de9c2fd4a0077d5e1991 Mon Sep 17 00:00:00 2001
+From: Heiko Thiery <heiko.thiery@kontron.com>
+Date: Sat, 19 Oct 2019 09:31:34 +0200
+Subject: [PATCH 50/50] Makefile add libtsn.pc.in file and add install
+
+Signed-off-by: Heiko Thiery <heiko.thiery@kontron.com>
+---
+ Makefile         | 24 +++++++++++++++++++++++-
+ lib/libtsn.pc.in |  9 +++++++++
+ 2 files changed, 32 insertions(+), 1 deletion(-)
+ create mode 100644 lib/libtsn.pc.in
+
+diff --git a/Makefile b/Makefile
+index c5ea0c8..2632b58 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1,3 +1,8 @@
++PREFIX ?= /usr
++BINDIR ?= $(PREFIX)/bin
++INCLUDEDIR ?= $(PREFIX)/include
++LIBDIR ?= $(PREFIX)/lib
++
+ PKG_CONFIG ?= pkg-config
+ LIB_CFLAGS   = $(CFLAGS)
+ LIB_LDFLAGS  ?= $(LDFLAGS)
+@@ -25,9 +30,12 @@ LIB_OBJ  = $(filter %.o, $(LIB_DEPS))              # Only the .o files
+ 
+ TSN_BIN = tsntool
+ TSN_LIB = libtsn.so
++TSN_LIB_PC = libtsn.pc
+ TSN_EVENT = event
+ TSTAMP_BIN = timestamping
+ 
++LIB_VERSION = 0
++
+ build: $(TSN_LIB) $(TSN_BIN) $(TSN_EVENT) $(TSTAMP_BIN)
+ 
+ $(TSN_LIB): $(LIB_DEPS)
+@@ -54,8 +62,22 @@ tools/$(TSN_EVENT).o: tools/$(TSN_EVENT).c
+ tools/$(TSTAMP_BIN).o: tools/$(TSTAMP_BIN).c
+ 	$(CC) -c tools/$(TSTAMP_BIN).c -o tools/$(TSTAMP_BIN).o $(BIN_CFLAGS)
+ 
++$(TSN_LIB_PC): lib/libtsn.pc.in
++	sed -e "s#@includedir@#$(INCLUDEDIR)#g" \
++		-e "s#@libdir@#$(LIBDIR)#g" \
++		-e "s#@version@#$(LIB_VERSION)#g" \
++		$< > $@
++
++install: include/tsn/genl_tsn.h $(TSN_LIB) $(TSN_BIN) $(TSN_LIB_PC)
++	install -d -m 0755 $(DESTDIR)$(BINDIR)
++	install -d -m 0755 $(DESTDIR)$(LIBDIR)
++	install -d -m 0755 $(DESTDIR)$(INCLUDEDIR)/tsn
++	install -m 0644 $(TSN_BIN) $(DESTDIR)$(BINDIR)/
++	install -m 0644 $(TSN_LIB) $(DESTDIR)$(LIBDIR)/
++	install -m 0644 include/tsn/genl_tsn.h $(DESTDIR)$(INCLUDEDIR)/tsn
++	install -D -m 644 $(TSN_LIB_PC) $(DESTDIR)$(LIBDIR)/pkgconfig/libtsn.pc
+ 
+ clean:
+-	rm -rf $(TSN_BIN) $(TSN_LIB) $(LIB_OBJ) $(BIN_OBJ) tools/*.o tools/$(TSN_EVENT) tools/$(TSTAMP_BIN)
++	rm -rf $(TSN_BIN) $(TSN_LIB) $(TSN_LIB_PC) $(LIB_OBJ) $(BIN_OBJ) tools/*.o tools/$(TSN_EVENT) tools/$(TSTAMP_BIN)
+ 
+ .PHONY: clean build
+diff --git a/lib/libtsn.pc.in b/lib/libtsn.pc.in
+new file mode 100644
+index 0000000..fb97e64
+--- /dev/null
++++ b/lib/libtsn.pc.in
+@@ -0,0 +1,9 @@
++libdir=@libdir@
++includedir=@includedir@
++
++Name: tsn
++Description: libtsn for NXP LS1028A
++Version: @version@
++Requires: libnl-3.0 libnl-genl-3.0 libcjson readline
++Libs: -L${libdir} -ltsn
++Cflags: -I${includedir}/tsn
+-- 
+2.20.1
+
