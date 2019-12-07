@@ -1,3 +1,9 @@
+################################################################################
+#
+# smarc-sal28-rcw
+#
+################################################################################
+
 SMARC_SAL28_RCW_VERSION = f85ab173dd5038e7cf219ac31e6db51d6a2ae825
 SMARC_SAL28_RCW_SITE = $(call github,kontron,rcw-smarc-sal28,$(SMARC_SAL28_RCW_VERSION))
 SMARC_SAL28_RCW_LICENSE = BSD-2-Clause

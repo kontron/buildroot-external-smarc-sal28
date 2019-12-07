@@ -1,16 +1,16 @@
 config BR2_PACKAGE_SMARC_SAL28_RCW
 	bool "SMARC sAL28 RCW"
 	help
-	  The reset configuration word for the SMARC sAL28 board. The user must
-	  choose one of the available options. The corresponding binary is then
-	  copied to the images output directory.
-
+	  The reset configuration word for the SMARC sAL28 board.
+	  The user must choose one of the available options.
+	  The corresponding binary is then copied to the images
+	  output directory.
 
 if BR2_PACKAGE_SMARC_SAL28_RCW
 config BR2_PACKAGE_SMARC_SAL28_RCW_VARIANT
 	string "RCW Variant"
 	default "4-11_q"
 	help
-	  The suffix of the RCW filename without the ".bin" part. Eg. setting
-	  this to "4-11_q" will use "sl28-4-11_q.bin".
+	  The suffix of the RCW filename without the ".bin" part.
+	  Eg. setting this to "4-11_q" will use "sl28-4-11_q.bin".
 endif
