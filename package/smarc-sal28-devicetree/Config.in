@@ -1,4 +1,5 @@
 config BR2_PACKAGE_SMARC_SAL28_DEVICETREE
 	bool "SMARC sAL28 devicetree and overlay fragments"
 	help
-	  The devicetree and overlay fragments for the SMARC sAL28 board.
+	  The devicetree and overlay fragments for the
+	  SMARC sAL28 board.

@@ -1,3 +1,9 @@
+################################################################################
+#
+# smarc-sal28-devicetree
+#
+################################################################################
+
 SMARC_SAL28_DEVICETREE_VERSION = 34b251b10db4f991133428097f45591a9df95ec3
 SMARC_SAL28_DEVICETREE_SITE = $(call github,kontron,devicetree-smarc-sal28,$(SMARC_SAL28_DEVICETREE_VERSION))
 SMARC_SAL28_DEVICETREE_LICENSE = BSD-2-Clause
