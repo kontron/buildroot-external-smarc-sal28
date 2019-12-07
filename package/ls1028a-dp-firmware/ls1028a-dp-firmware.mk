@@ -1,3 +1,9 @@
+################################################################################
+#
+# ls1028a-dp-firmware
+#
+################################################################################
+
 LS1028A_DP_FIRMWARE_VERSION = ls1028a_bsp_01
 LS1028A_DP_FIRMWARE_SITE = https://www.nxp.com/lgfiles/sdk/$(LS1028A_DP_FIRMWARE_VERSION)
 LS1028A_DP_FIRMWARE_SOURCE = ls1028a-dp-fw.bin
