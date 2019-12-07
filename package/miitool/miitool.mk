@@ -1,3 +1,9 @@
+################################################################################
+#
+# miitool
+#
+################################################################################
+
 MIITOOL_VERSION = 1.1
 MIITOOL_SITE = $(call github,kontron,miitool,$(MIITOOL_VERSION))
 MIITOOL_LICENSE = BSD-2c
