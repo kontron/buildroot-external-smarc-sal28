@@ -1,0 +1,11 @@
+config BR2_PACKAGE_KEAPI
+	bool "keapi"
+	depends on BR2_TOOLCHAIN_HAS_THREADS
+	select BR2_PACKAGE_JANSSON
+	select BR2_PACKAGE_LIBATASMART
+	select BR2_PACKAGE_PCRE
+	help
+	  Kontron Embedded API
+
+comment "keapi needs a toolchain w/ threads"
+	depends on !BR2_TOOLCHAIN_HAS_THREADS
