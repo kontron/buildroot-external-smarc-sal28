@@ -1,3 +1,9 @@
+################################################################################
+#
+# altera-stapl
+#
+################################################################################
+
 ALTERA_STAPL_VERSION = 0.3.2
 ALTERA_STAPL_SITE = $(call github,kontron,altera-stapl,$(ALTERA_STAPL_VERSION))
 ALTERA_STAPL_LICENSE = GPLv2+
