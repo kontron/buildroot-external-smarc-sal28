@@ -1,0 +1,9 @@
+config BR2_PACKAGE_KEAPI_KTOOL
+	bool "keapi-ktool"
+	depends on BR2_PACKAGE_KEAPI
+	help
+	  Kontron Embedded API
+
+comment "keapi-tools needs keapi"
+	depends on !BR2_PACKAGE_KEAPI
+

@@ -1,0 +1,85 @@
+From b2cf84c82d1f6e01067faff1270d5a25f9e9ac52 Mon Sep 17 00:00:00 2001
+From: Heiko Thiery <heiko.thiery@kontron.com>
+Date: Fri, 6 Dec 2019 14:20:42 +0100
+Subject: [PATCH] Makefile: improvements for cross compilation
+
+During integration into buildroot several issues pop up. Therefore the
+following improvements are done:
+
+- add install rule
+- add pkg-config support to get keapi library include/lib parameters
+- add automatic dependency generation
+- only set ktool as default rule in 'all'
+- other cleanup and improvements
+
+Signed-off-by: Heiko Thiery <heiko.thiery@kontron.com>
+---
+ Makefile | 43 +++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 35 insertions(+), 8 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index d191c10..aa0aeaf 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1,9 +1,25 @@
++TOPDIR := $(shell pwd)
++
+ CC = gcc
+-CFLAGS = -I./include -I/usr/include/keapi -Wall -Wextra -pedantic -g -O0
+-LDFLAGS = -lkeapi
++CFLAGS ?= -Wall -Wextra -pedantic -g -O0
++LDFLAGS ?= -lkeapi
++
++PKG_CONFIG ?= pkg-config
++INSTALL ?= install
++
++# install directories
++PREFIX ?= /usr
++BINDIR ?= $(PREFIX)/bin
++
++cflags_for_lib = $(shell $(PKG_CONFIG) --cflags $(1))
++ldflags_for_lib = $(shell $(PKG_CONFIG) --libs $(1))
++
++KEAPI_CFLAGS += -I$(TOPDIR)/include
++KEAPI_CFLAGS += $(call cflags_for_lib,keapi)
++
++KEAPI_LIBS += $(call ldflags_for_lib,keapi)
+ 
+ OUT_DIR = bin
+-FILE_EXT =
+ 
+ SRCS = src/keapi-battery.c src/keapi-cpu.c src/keapi-eeprom.c \
+ 	src/keapi-gpio.c src/keapi-pcidev.c src/keapi-voltage.c \
+@@ -14,13 +30,24 @@ SRCS = src/keapi-battery.c src/keapi-cpu.c src/keapi-eeprom.c \
+ 
+ OBJECTS=$(SRCS:.c=.o)
+ 
+-all: clean $(OUT_DIR) $(OBJECTS) ktool
++DEPS := $(shell find $(TOPDIR) -name '*.d')
+ 
+-ktool: $(OBJECTS)
+-	$(CC) $(CFLAGS) $(OBJECTS) $(LDFLAGS) -o $(OUT_DIR)/$@
++all: $(OUT_DIR)/ktool
+ 
++src/%.o: src/%.c
++	$(CC) -MD -MT $@ -MF $(@:.o=.d) $(CFLAGS) $(KEAPI_CFLAGS) -c -o $@ $<
++
++$(OUT_DIR)/ktool: $(OBJECTS)
++	mkdir -p $(OUT_DIR)
++	$(CC) $(OBJECTS) $(LDFLAGS) -o $@ $(KEAPI_LIBS)
++
++install: $(OUT_DIR)/ktool
++	$(INSTALL) -d -m 0755 $(DESTDIR)$(BINDIR)
++	$(INSTALL) -m 0755 $(OUT_DIR)/ktool $(DESTDIR)/$(BINDIR)
++
++.PHONY: clean
+ clean:
+ 	rm -rf $(OUT_DIR)/* $(SRCS:.c=.o)
++	rm -f $(DEPS)
+ 
+-$(OUT_DIR):
+-	mkdir -p $(OUT_DIR)
++-include $(DEPS)
+-- 
+2.20.1
+
