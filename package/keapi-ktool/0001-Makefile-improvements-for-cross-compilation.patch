@@ -1,4 +1,4 @@
-From b2cf84c82d1f6e01067faff1270d5a25f9e9ac52 Mon Sep 17 00:00:00 2001
+From 3850bb095449985eeb48a15688b562d05335ca10 Mon Sep 17 00:00:00 2001
 From: Heiko Thiery <heiko.thiery@kontron.com>
 Date: Fri, 6 Dec 2019 14:20:42 +0100
 Subject: [PATCH] Makefile: improvements for cross compilation
@@ -18,7 +18,7 @@ Signed-off-by: Heiko Thiery <heiko.thiery@kontron.com>
  1 file changed, 35 insertions(+), 8 deletions(-)
 
 diff --git a/Makefile b/Makefile
-index d191c10..aa0aeaf 100644
+index d191c10..c8f0d76 100644
 --- a/Makefile
 +++ b/Makefile
 @@ -1,9 +1,25 @@
@@ -35,7 +35,7 @@ index d191c10..aa0aeaf 100644
 +
 +# install directories
 +PREFIX ?= /usr
-+BINDIR ?= $(PREFIX)/bin
++SBINDIR ?= $(PREFIX)/sbin
 +
 +cflags_for_lib = $(shell $(PKG_CONFIG) --cflags $(1))
 +ldflags_for_lib = $(shell $(PKG_CONFIG) --libs $(1))
@@ -69,8 +69,8 @@ index d191c10..aa0aeaf 100644
 +	$(CC) $(OBJECTS) $(LDFLAGS) -o $@ $(KEAPI_LIBS)
 +
 +install: $(OUT_DIR)/ktool
-+	$(INSTALL) -d -m 0755 $(DESTDIR)$(BINDIR)
-+	$(INSTALL) -m 0755 $(OUT_DIR)/ktool $(DESTDIR)/$(BINDIR)
++	$(INSTALL) -d -m 0755 $(DESTDIR)$(SBINDIR)
++	$(INSTALL) -m 0755 $(OUT_DIR)/ktool $(DESTDIR)/$(SBINDIR)
 +
 +.PHONY: clean
  clean:
