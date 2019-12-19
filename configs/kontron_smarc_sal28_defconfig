@@ -105,7 +105,7 @@ BR2_TARGET_UBOOT=y
 BR2_TARGET_UBOOT_BUILD_SYSTEM_KCONFIG=y
 BR2_TARGET_UBOOT_CUSTOM_GIT=y
 BR2_TARGET_UBOOT_CUSTOM_REPO_URL="https://github.com/kontron/u-boot-smarc-sal28.git"
-BR2_TARGET_UBOOT_CUSTOM_REPO_VERSION="$(shell git ls-remote https://github.com/kontron/u-boot-smarc-sal28.git master | awk '{ print $$1 }')"
+BR2_TARGET_UBOOT_CUSTOM_REPO_VERSION="release-R11"
 BR2_TARGET_UBOOT_BOARD_DEFCONFIG="kontron_sl28"
 BR2_TARGET_UBOOT_NEEDS_DTC=y
 # BR2_TARGET_UBOOT_FORMAT_BIN is not set
