@@ -20,7 +20,7 @@ provided together with the board.
 
 ## Install System Dependencies
 
-The external is tested on Debian 9. The following system build
+The external is tested on Debian 10. The following system build
 dependencies are required (by buildroot itself).
 
 ```
@@ -38,7 +38,7 @@ appropriate defconfig in the `buildroot-external-smarc-sal28/configs`
 directory.
 
 ```
-git clone git://git.busybox.net/buildroot -b 2019.08
+git clone git://git.busybox.net/buildroot -b 2020.02
 git clone https://github.com/kontron/buildroot-external-smarc-sal28.git
 mkdir build
 cd build
