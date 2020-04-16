@@ -1,9 +1,9 @@
 --- a/Makefile
 +++ b/Makefile
 @@ -9,7 +9,7 @@
- BIN_CFLAGS  += -Wall -Wextra -Wno-error=unused-parameter -Wno-error=sign-compare -g -fstack-protector-all -Imain
- BIN_CFLAGS  += $(shell pkg-config --cflags libnl-3.0 libnl-genl-3.0) -Iinclude
- BIN_LDFLAGS += -ltsn $(shell pkg-config --libs libnl-3.0 libnl-genl-3.0 libcjson) -lpthread -lm -lrt
+ BIN_CFLAGS  += -Wall -Wextra -Wno-error=unused-parameter -Wno-error=sign-compare -Wno-format-security -g -fstack-protector-all -Imain
+ BIN_CFLAGS  += $(shell $(PKG_CONFIG) --cflags libnl-3.0 libnl-genl-3.0 libcjson) -Iinclude
+ BIN_LDFLAGS += -ltsn $(shell $(PKG_CONFIG) --libs libnl-3.0 libnl-genl-3.0 libcjson) -lpthread -lm -lrt
 -BIN_LDFLAGS += -lreadline -ltermcap -L.
 +BIN_LDFLAGS += -lreadline -lncurses -L.
  BIN_LDFLAGS += -Wl,-rpath,$(shell pwd)         # Compiled lib at local folder
