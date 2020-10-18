@@ -29,7 +29,7 @@ bash patch gzip bzip2 perl tar cpio python unzip rsync file \
 bc wget libncurses5-dev git subversion
 ```
 
-This layer was tested on buildroot version 2019.08.
+This layer was tested on buildroot version 2020.08.
 
 ## Build
 
