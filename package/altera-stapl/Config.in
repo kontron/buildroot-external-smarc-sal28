@@ -1,5 +1,0 @@
-config BR2_PACKAGE_ALTERA_STAPL
-	bool "altera-stapl"
-	select BR2_PACKAGE_LIBGPIOD
-	help
-	  Altera Jam STAPL Bytecode Player.
