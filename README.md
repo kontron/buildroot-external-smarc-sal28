@@ -38,7 +38,7 @@ appropriate defconfig in the `buildroot-external-smarc-sal28/configs`
 directory.
 
 ```
-git clone git://git.busybox.net/buildroot -b 2020.08
+git clone git://git.busybox.net/buildroot -b 2021.02
 git clone https://github.com/kontron/buildroot-external-smarc-sal28.git
 mkdir build
 cd build
