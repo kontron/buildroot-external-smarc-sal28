@@ -4,9 +4,9 @@
 #
 ################################################################################
 
-LS1028A_DP_FIRMWARE_VERSION = ls1028a_bsp_01
+LS1028A_DP_FIRMWARE_VERSION = lsdk2012
 LS1028A_DP_FIRMWARE_SITE = https://www.nxp.com/lgfiles/sdk/$(LS1028A_DP_FIRMWARE_VERSION)
-LS1028A_DP_FIRMWARE_SOURCE = ls1028a-dp-fw.bin
+LS1028A_DP_FIRMWARE_SOURCE = firmware-cadence-$(LS1028A_DP_FIRMWARE_VERSION).bin
 LS1028A_DP_FIRMWARE_INSTALL_TARGET = NO
 LS1028A_DP_FIRMWARE_INSTALL_IMAGES = YES
 
@@ -19,7 +19,7 @@ define LS1028A_DP_FIRMWARE_EXTRACT_CMDS
 endef
 
 define LS1028A_DP_FIRMWARE_INSTALL_IMAGES_CMDS
-	cp $(@D)/cadence/mhdp_fw_1_0_51-dptx-hdcp-mcu2.bin $(BINARIES_DIR)/ls1028a-dp-fw.bin
+	$(INSTALL) -D -m 0644 $(@D)/dp/ls1028a-dp-fw.bin $(BINARIES_DIR)/ls1028a-dp-fw.bin
 endef
 
 $(eval $(generic-package))
