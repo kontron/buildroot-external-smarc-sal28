@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-TSNTOOL_VERSION = LSDK-20.04
+TSNTOOL_VERSION = LSDK-20.12
 TSNTOOL_SITE = https://source.codeaurora.org/external/qoriq/qoriq-components/tsntool
 TSNTOOL_SITE_METHOD = git
 TSNTOOL_LICENSE = MIT or GPL-2.0+
