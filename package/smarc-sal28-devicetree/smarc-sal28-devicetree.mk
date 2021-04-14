@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-SMARC_SAL28_DEVICETREE_VERSION = 6b5606fd18aa6af8c4bac0e33b73c328ecdee149
+SMARC_SAL28_DEVICETREE_VERSION = 2a0ab5d83998bbf04e88b06e96dc20c368f9add7
 SMARC_SAL28_DEVICETREE_SITE = $(call github,kontron,devicetree-smarc-sal28,$(SMARC_SAL28_DEVICETREE_VERSION))
 SMARC_SAL28_DEVICETREE_LICENSE = BSD-2-Clause
 SMARC_SAL28_DEVICETREE_LICENSE_FILES = COPYING
