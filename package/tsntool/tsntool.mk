@@ -5,8 +5,7 @@
 ################################################################################
 
 TSNTOOL_VERSION = LSDK-20.12
-TSNTOOL_SITE = https://source.codeaurora.org/external/qoriq/qoriq-components/tsntool
-TSNTOOL_SITE_METHOD = git
+TSNTOOL_SITE = $(call github,nxp-qoriq,tsntool,$(TSNTOOL_VERSION))
 TSNTOOL_LICENSE = MIT or GPL-2.0+
 TSNTOOL_LICENSE_FILES = LICENSE
 TSNTOOL_INSTALL_STAGING = YES
